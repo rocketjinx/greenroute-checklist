@@ -6,13 +6,18 @@
     body { font-family: Arial; max-width: 800px; margin: 0 auto; padding: 20px; }
     .task { margin: 10px 0; padding: 10px; background: #f5f5f5; border-radius: 5px; }
     .done { text-decoration: line-through; color: #888; }
+    #progress-bar { margin: 20px 0; height: 10px; background: #eee; border-radius: 5px; }
+    #progress-fill { height: 100%; background: #4CAF50; border-radius: 5px; width: 0%; }
+    button { margin-top: 10px; padding: 8px 15px; background: #4CAF50; color: white; border: none; border-radius: 4px; cursor: pointer; }
+    button.reset { background: #ff4444; }
   </style>
 </head>
 <body>
   <h1>GreenRoute Development Checklist</h1>
-  <div id="checklist">
-    <!-- Tasks will be added here by JavaScript -->
-  </div>
+  <div id="progress-bar"><div id="progress-fill"></div></div>
+  <div id="checklist"></div>
+  <button onclick="clearAll()" class="reset">Reset Progress</button>
+
   <script>
     const tasks = [
       "Day 1: Research ISO 14083 & GLEC Framework",
@@ -32,20 +37,50 @@
     ];
 
     const checklist = document.getElementById("checklist");
-    tasks.forEach(task => {
-      const div = document.createElement("div");
-      div.className = "task";
-      div.innerHTML = `
-        <input type="checkbox" id="${task}" onclick="toggleTask(this)">
-        <label for="${task}">${task}</label>
-      `;
-      checklist.appendChild(div);
-    });
+    const progressFill = document.getElementById("progress-fill");
 
+    // Load saved progress
+    function loadProgress() {
+      let completed = 0;
+      tasks.forEach(task => {
+        const isChecked = localStorage.getItem(task) === "true";
+        if (isChecked) completed++;
+        
+        const div = document.createElement("div");
+        div.className = "task";
+        div.innerHTML = `
+          <input type="checkbox" id="${task}" ${isChecked ? "checked" : ""} onclick="toggleTask(this)">
+          <label for="${task}" ${isChecked ? 'class="done"' : ""}>${task}</label>
+        `;
+        checklist.appendChild(div);
+      });
+      updateProgressBar(completed);
+    }
+
+    // Toggle task and save progress
     function toggleTask(checkbox) {
       const label = checkbox.nextElementSibling;
       label.classList.toggle("done");
+      localStorage.setItem(checkbox.id, checkbox.checked);
+      updateProgressBar();
     }
+
+    // Update progress bar
+    function updateProgressBar() {
+      const checkboxes = document.querySelectorAll("input[type=checkbox]");
+      const completed = Array.from(checkboxes).filter(cb => cb.checked).length;
+      const progress = (completed / tasks.length) * 100;
+      progressFill.style.width = `${progress}%`;
+    }
+
+    // Reset all progress
+    function clearAll() {
+      tasks.forEach(task => localStorage.removeItem(task));
+      location.reload();
+    }
+
+    // Initialize
+    loadProgress();
   </script>
 </body>
 </html>
