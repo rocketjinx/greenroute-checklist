@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>GreenRoute Dev Checklist</title>
+  <style>
+    body { font-family: Arial; max-width: 800px; margin: 0 auto; padding: 20px; }
+    .task { margin: 10px 0; padding: 10px; background: #f5f5f5; border-radius: 5px; }
+    .done { text-decoration: line-through; color: #888; }
+  </style>
+</head>
+<body>
+  <h1>GreenRoute Development Checklist</h1>
+  <div id="checklist">
+    <!-- Tasks will be added here by JavaScript -->
+  </div>
+  <script>
+    const tasks = [
+      "Day 1: Research ISO 14083 & GLEC Framework",
+      "Day 2: Set up React/Node.js project",
+      "Day 3: Design UI mockup",
+      "Day 4: Integrate map (Leaflet.js)",
+      "Day 5: Implement CO2 calculation logic",
+      "Day 6: Connect frontend to backend",
+      "Day 7: Fetch optimized routes (API)",
+      "Day 8: Add city-wise emission breakdown",
+      "Day 9: Fuel comparison dropdown",
+      "Day 10: Heatmap overlay",
+      "Day 11: Integrate Gemini API for reasoning",
+      "Day 12: Design reasoning box UI",
+      "Day 13: Test & debug all features",
+      "Day 14: Deploy & write documentation"
+    ];
+
+    const checklist = document.getElementById("checklist");
+    tasks.forEach(task => {
+      const div = document.createElement("div");
+      div.className = "task";
+      div.innerHTML = `
+        <input type="checkbox" id="${task}" onclick="toggleTask(this)">
+        <label for="${task}">${task}</label>
+      `;
+      checklist.appendChild(div);
+    });
+
+    function toggleTask(checkbox) {
+      const label = checkbox.nextElementSibling;
+      label.classList.toggle("done");
+    }
+  </script>
+</body>
+</html>
